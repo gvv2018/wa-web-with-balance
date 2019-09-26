@@ -6,8 +6,11 @@
 [first]
 12g.lab.int
 
-[second]
+[debian]
 12e.lab.int
+
+[centos]
+12f.lab.int
 
 [work_servers]
 12g.lab.int

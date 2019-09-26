@@ -1,0 +1,10 @@
+---
+# defaults file for apache-php
+nginx_service: nginx
+nginx_conf_path: /etc/nginx
+nginx_liset_port_default: 8080
+nginx_liset_port_blue: 8081
+nginx_liset_port_red: 8082
+vhost_servername: "12e.lab.int"
+vhost_documentroot_blue: "/var/www/blue"
+vhost_documentroot_red: "/var/www/red"

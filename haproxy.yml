@@ -1,0 +1,76 @@
+---
+- name: Install HAProxy
+  hosts: debian
+  become: yes
+  vars_files:
+    - secret
+  roles:
+      - role: haproxy
+        haproxy_user: user
+        haproxy_pass: user
+        haproxy_conf: |
+          frontend localnodes
+            bind *:80
+            mode http
+
+            acl lb      hdr(host)             -i                12e.lab.int
+          #  acl green	url_beg	-i	/index
+          #  acl red	path_beg	-i	/red
+
+            acl webacad-net src 10.0.0.0/24 192.168.0.0/24
+
+            redirect scheme https if { hdr(Host)                   -i 12e.devopsit.com.ua } !{ ssl_fc }
+
+          #  use_backend webhook_backend            if    green
+          #  use_backend webhook_backend1           if    red
+            default_backend error404_backend
+
+          frontend https
+                  bind    *:443 ssl crt /etc/haproxy/certs/12e.devopsit.com.ua.pem
+                  mode    http
+                  option  httpclose
+                  option  httplog
+                  option  forwardfor
+                  http-request add-header X-Forwarded-Proto https if { ssl_fc }
+
+          #        acl registry  hdr(host)          -i registry.lab.int
+          #        acl nexus     hdr(host)          -i    nexus.lab.int
+                  acl devopsit  hdr(host)          -i  12e.devopsit.com.ua
+                  acl stats path_beg	-i /stats
+                  acl blue path_beg	-i /blue
+                  acl red path_beg	-i /red
+
+
+                  # Registry Auth
+          #        acl auth_registry http_auth_group(auth_list) microservices
+          #        use_backend registry_backend_auth     if !auth_registry { ssl_fc } registry
+          #        use_backend docker_registry_backend   if registry
+          #        use_backend nexus_backend             if nexus
+
+                  use_backend webhook_backend_blue       if blue || devopsit
+                  use_backend webhook_backend_red        if red || devopsit
+                  use_backend webhook_backend_stats      if stats || devopsit
+          #        use_backend webhook_backend            if devopsit
+
+                  default_backend error404_backend
+
+
+          backend error404_backend
+            mode            http
+            errorfile 503 /etc/haproxy/errors/400.http
+
+          #backend webhook_backend
+          #  option forwardfor
+          #  server web1 12e.lab.int:8080
+
+          backend webhook_backend_blue
+            option forwardfor
+            server web-blue 12e.lab.int:8081
+
+          backend webhook_backend_red
+            option forwardfor
+            server web-red 12e.lab.int:8082
+
+          backend webhook_backend_stats
+            option forwardfor
+            server stats 12e.lab.int:9001

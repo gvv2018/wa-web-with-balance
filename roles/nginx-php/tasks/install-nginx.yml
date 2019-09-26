@@ -1,0 +1,53 @@
+---
+# tasks file for apache-php
+
+- name: Install Nginx server
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+#- name: Install PHP module for Apache
+#  apt:
+#    name: libapache2-mod-php
+#    state: present
+#    update_cache: yes
+
+- name: Delete Default simlink
+  file:
+    path: "{{ nginx_conf_path }}/sites-enabled/default"
+    state: absent
+
+- name: Copy Nginx vhosts configuration files
+  template:
+    src: vhost1.conf.j2
+    dest: "{{ nginx_conf_path }}/sites-available/vhost1.conf"
+  notify: Restart Nginx
+
+- name: Copy Nginx vhosts configuration files
+  template:
+    src: vhost2.conf.j2
+    dest: "{{ nginx_conf_path }}/sites-available/vhost2.conf"
+  notify: Restart Nginx
+
+- name: Create simlink
+  file:
+    src: "{{ nginx_conf_path }}/sites-available/vhost1.conf"
+    dest: "{{ nginx_conf_path }}/sites-enabled/vhost1.conf"
+    state: link
+
+- name: Create simlink
+  file:
+    src: "{{ nginx_conf_path }}/sites-available/vhost2.conf"
+    dest: "{{ nginx_conf_path }}/sites-enabled/vhost2.conf"
+    state: link
+
+#- name: Copy index.php with php_info
+#  template:
+#    src: index.php.j2
+#    dest: "{{ vhost_documentroot }}/index.php"
+
+- name: Service Nginx is enabled
+  service:
+    name: "{{ nginx_service }}"
+    enabled: yes
