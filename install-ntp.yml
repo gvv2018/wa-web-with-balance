@@ -1,0 +1,8 @@
+---
+- name: Configure NTP client
+  hosts: all
+  become: yes
+  vars_files:
+    - secret
+  roles:
+    - ansible-role-ntp
