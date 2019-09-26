@@ -1,0 +1,14 @@
+[my_servers]
+12g.lab.int
+12e.lab.int
+12f.lab.int
+
+[first]
+12g.lab.int
+
+[second]
+12e.lab.int
+
+[work_servers]
+12g.lab.int
+12e.lab.int
