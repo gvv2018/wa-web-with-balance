@@ -1,0 +1,66 @@
+---
+# tasks file for consul
+- name: Install unzip
+  package:
+    name: unzip
+    state: present
+
+- name: Download consul
+  get_url:
+    url: "{{ consul_download_link }}"
+    dest: "{{ consul_exec_dir }}consul.zip"
+
+- name: Unzip consul
+  unarchive:
+    src: "{{ consul_exec_dir }}consul.zip"
+    dest: "{{ consul_exec_dir }}"
+    remote_src: yes
+
+- name: Delete zip file
+  file:
+    state: absent
+    path: "{{ consul_exec_dir }}consul.zip"
+
+- name: Add user consul
+  user:
+    name: consul
+    create_home: no
+
+- name: Create config directory
+  file:
+    path: "{{ consul_conf_dir }}"
+    state: directory
+
+- name: Create database directory
+  file:
+    path: "{{ consul_database_dir }}"
+    state: directory
+    owner: consul
+    group: consul
+
+- name: Add consul to systemctl
+  template:
+    src: consul.service.j2
+    dest: "{{ consul_systemd_file }}"
+
+- name: Copy server configuration file
+  template:
+    src: server.json.j2
+    dest: "{{ consul_conf_dir }}/server.json"
+  when: type_server
+
+- name: Cope agent configuration file
+  template:
+    src: client.json.j2
+    dest: "{{ consul_conf_dir }}/client.json"
+  when: not type_server
+
+- name: Enable consul service
+  service:
+    name: consul
+    enabled: yes
+
+- name: Start consul service
+  service:
+    name: consul
+    state: started

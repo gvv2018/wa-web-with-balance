@@ -1,0 +1,11 @@
+---
+# defaults file for consul
+
+consul_download_link: https://releases.hashicorp.com/consul/1.6.1/consul_1.6.1_linux_amd64.zip
+consul_user: consul
+consul_group: consul
+consul_exec_dir: /usr/local/sbin/
+consul_conf_dir: /etc/consul
+consul_database_dir: /opt/consul
+consul_datacenter: 12lab_int
+consul_systemd_file: /etc/systemd/system/consul.service

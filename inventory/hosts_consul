@@ -1,0 +1,8 @@
+[servers_1]
+12g.lab.int
+
+[servers_2]
+12f.lab.int
+
+[agent]
+12e.lab.int

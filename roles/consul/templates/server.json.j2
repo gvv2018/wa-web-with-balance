@@ -1,0 +1,16 @@
+{
+  "advertise_addr": "{{ advertise_addr_server }}",
+  "bootstrap_expect": 2,
+  "client_addr": "0.0.0.0" ,
+  "data_dir": "{{ consul_database_dir }}",
+  "datacenter": "{{ consul_datacenter }}",
+  "log_level": "ERR",
+  "node_name": "{{ consul_node_name }}",
+  "rejoin_after_leave": true,
+  "skip_leave_on_interrupt": true,
+  "enable_script_checks": true,
+  "leave_on_terminate": false,
+  "retry_interval": "30s",
+  "retry_join": [ {{ consul_join_ip }} ],
+  "server": true
+}

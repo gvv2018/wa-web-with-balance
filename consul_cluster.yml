@@ -1,0 +1,40 @@
+---
+- name: Install servers 12g
+  hosts: servers_1
+  become: yes
+  vars_files:
+    - secret
+  vars:
+    type_server: true
+    advertise_addr_server: 12g.lab.int
+    consul_node_name: 10.0.0.112
+    consul_join_ip: "10.0.0.162"
+  roles:
+    - consul
+
+- name: Install servers 12f
+  hosts: servers_2
+  become: yes
+  vars_files:
+    - secret
+  vars:
+    type_server: true
+    advertise_addr_server: 12f.lab.int
+    consul_node_name: 10.0.0.162
+    consul_join_ip: "10.0.0.112"
+  roles:
+    - consul
+
+- name: Install client 12e
+  hosts: agent
+  become: yes
+  vars_files:
+    - secret
+  vars:
+    type_server: false
+    advertise_addr_client: 12e.lab.int
+    consul_node_name: 10.0.0.110
+    consul_join_ip1: 10.0.0.162
+    consul_join_ip2: 10.0.0.112
+  roles:
+    - consul
