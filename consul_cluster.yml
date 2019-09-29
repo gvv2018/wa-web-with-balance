@@ -6,8 +6,8 @@
     - secret
   vars:
     type_server: true
-    advertise_addr_server: 12g.lab.int
-    consul_node_name: 10.0.0.112
+    advertise_addr_server: 10.0.0.112
+    consul_node_name: 12g.lab.int
     consul_join_ip: 10.0.0.162
   roles:
     - consul
@@ -19,8 +19,8 @@
     - secret
   vars:
     type_server: true
-    advertise_addr_server: 12f.lab.int
-    consul_node_name: 10.0.0.162
+    advertise_addr_server: 10.0.0.162
+    consul_node_name: 12f.lab.int
     consul_join_ip: 10.0.0.112
   roles:
     - consul
@@ -32,8 +32,8 @@
     - secret
   vars:
     type_server: false
-    advertise_addr_client: 12e.lab.int
-    consul_node_name: 10.0.0.110
+    advertise_addr_client: 10.0.0.110
+    consul_node_name: 12e.lab.int
     consul_join_ip1: 10.0.0.162
     consul_join_ip2: 10.0.0.112
   roles:
